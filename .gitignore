@@ -1,0 +1,5 @@
+functions/node_modules
+firmware/*.pem
+firmware/build/
+
+.vscode
