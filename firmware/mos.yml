@@ -34,7 +34,6 @@ libs:
   - origin: https://github.com/mongoose-os-libs/i2c
 
   # libs for the current app
-  - origin: https://github.com/mongoose-os-libs/arduino-adafruit-bme280
   - origin: https://github.com/mongoose-os-libs/gcp
   - origin: https://github.com/mongoose-os-libs/mjs
   - origin: https://github.com/mongoose-os-libs/dht
