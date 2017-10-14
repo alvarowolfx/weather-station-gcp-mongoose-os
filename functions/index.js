@@ -1,6 +1,7 @@
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 const bigquery = require('@google-cloud/bigquery')();
+const cors = require('cors')({ origin: true });
 
 admin.initializeApp(functions.config().firebase);
 
@@ -55,24 +56,35 @@ function insertIntoBigquery(data) {
   return table.insert(data);
 }
 
-/*
-const Firestore = require('@google-cloud/firestore');
+exports.getReportData = functions.https.onRequest((req, res) => {
+  const table = '`weather-station-iot-170004.raw_data.sensors`';
 
-const db = new Firestore();
-const telemetryRef = db.collection('telemetry');
+  const query = `
+    SELECT 
+      TIMESTAMP_TRUNC(data.timestamp, HOUR, 'America/Cuiaba') data_hora,
+      avg(data.temp) as avg_temp,
+      avg(data.humidity) as avg_hum,
+      min(data.temp) as min_temp,
+      max(data.temp) as max_temp,
+      min(data.humidity) as min_hum,
+      max(data.humidity) as max_hum,
+      count(*) as data_points      
+    FROM ${table} data
+    WHERE _PARTITIONTIME between timestamp_sub(current_timestamp, INTERVAL 7 DAY) and current_timestamp()
+    group by data_hora
+    order by data_hora
+  `;
 
-exports.receiveTelemetry = functions.pubsub
-  .topic('telemetry-topic')
-  .onPublish(event => {
-    console.log(event);
+  return bigquery
+    .query({
+      query: query,
+      useLegacySql: false
+    })
+    .then(result => {
+      const rows = result[0];
 
-    const message = event.data.json;
-
-    return telemetryRef.add({
-      humidity: message.hum,
-      temperature: message.temp,
-      deviceId: event.data.attributes['deviceId'],
-      timestamp: event.timestamp
+      cors(req, res, () => {
+        res.json(rows);
+      });
     });
-  });
-*/
+});
