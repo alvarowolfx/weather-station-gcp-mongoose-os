@@ -27,6 +27,16 @@ exports.receiveTelemetry = functions.pubsub
       timestamp: event.timestamp
     };
 
+    if (
+      message.hum < 0 ||
+      message.hum > 100 ||
+      message.temp > 100 ||
+      message.temp < -50
+    ) {
+      // Validate and do nothing
+      return;
+    }
+
     return Promise.all([
       insertIntoBigquery(data),
       updateCurrentDataFirebase(data)
@@ -57,7 +67,7 @@ function insertIntoBigquery(data) {
 }
 
 exports.getReportData = functions.https.onRequest((req, res) => {
-  const table = '`weather-station-iot-170004.raw_data.sensors`';
+  const table = '`weather-station-iot-170004.weather_station_iot.raw_data`';
 
   const query = `
     SELECT 
@@ -70,7 +80,7 @@ exports.getReportData = functions.https.onRequest((req, res) => {
       max(data.humidity) as max_hum,
       count(*) as data_points      
     FROM ${table} data
-    WHERE _PARTITIONTIME between timestamp_sub(current_timestamp, INTERVAL 7 DAY) and current_timestamp()
+    WHERE data.timestamp between timestamp_sub(current_timestamp, INTERVAL 7 DAY) and current_timestamp()
     group by data_hora
     order by data_hora
   `;
