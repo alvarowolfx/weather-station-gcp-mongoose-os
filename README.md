@@ -1,3 +1,8 @@
+# Build a Weather station using Google Cloud IoT Core and Mongoose OS
+
+
+WebApp: https://weather-station-iot-170004.firebaseapp.com
+
 ### Setup Google cloud tools and project
 
 * Install beta components:
@@ -46,5 +51,5 @@ Here we will use it to store all of ours collected sensor data to run some queri
 
 * `npm install -g firebase-tools` or `yarn global add firebase-tools`
 * `firebase init`
-* `firebase functions:config:set bigquery.datasetname="bar" bigquery.tablename="baz"`
+* `$ firebase functions:config:set bigquery.datasetname="weather_station_iot" bigquery.tablename="raw_data"` 
 * `firebase deploy`
