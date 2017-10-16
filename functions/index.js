@@ -66,6 +66,10 @@ function insertIntoBigquery(data) {
   return table.insert(data);
 }
 
+/**
+ * Query bigquery with the last 7 days of data
+ * HTTPS endpoint to be used by the webapp
+ */
 exports.getReportData = functions.https.onRequest((req, res) => {
   const table = '`weather-station-iot-170004.weather_station_iot.raw_data`';
 

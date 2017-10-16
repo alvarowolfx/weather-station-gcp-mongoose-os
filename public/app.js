@@ -39,8 +39,7 @@ document.addEventListener('DOMContentLoaded', function() {
   fetchReportData();
 });
 
-const reportDataUrl =
-  'https://us-central1-weather-station-iot-170004.cloudfunctions.net/getReportData';
+const reportDataUrl = '/getReportData';
 
 function fetchReportData() {
   try {
