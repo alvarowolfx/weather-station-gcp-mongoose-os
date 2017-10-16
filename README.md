@@ -29,7 +29,7 @@ WebApp: https://weather-station-iot-170004.firebaseapp.com
 
 To use it we need to download and install it from the official website. Follow the installation instructions on https://mongoose-os.com/docs/quickstart/setup.html.
 
-* `mos build --arch esp32`
+* `mos build --arch esp32` or `mos build --arch esp8266`
 * `mos flash`
 
 ### Provision and config

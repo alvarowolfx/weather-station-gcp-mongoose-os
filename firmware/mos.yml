@@ -21,7 +21,7 @@ filesystem:
 config_schema:
   - ["i2c.enable", true]
   - ["app", "o", { title: "App custom settings"}]
-  - ["app.dht", "i", 23, { title: "DHT pin"}]
+  - ["app.dht", "i", 21, { title: "DHT pin"}]
 
 # List of libraries used by this app, in order of initialisation
 libs:
