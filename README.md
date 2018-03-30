@@ -23,7 +23,7 @@ WebApp: https://weather-station-iot-170004.firebaseapp.com
 * Create PubSub subscription for device data:
     * `gcloud beta pubsub subscriptions create --topic telemetry-topic telemetry-subscription`
 * Create device registry:
-    * `gcloud beta iot registries create weather-station-registry --region us-central1 --event-pubsub-topic=telemetry-topic`
+    * `gcloud beta iot registries create weather-station-registry --region us-central1 -event-notification-config=topic=projects/YOUR_PROJECT_NAME/topics/telemetry-topic`
 
 ### Upload firmware with Mongoose OS Tools
 
