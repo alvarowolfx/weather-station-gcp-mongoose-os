@@ -14,9 +14,9 @@ const db = admin.database();
  */
 exports.receiveTelemetry = functions.pubsub
   .topic('telemetry-topic')
-  .onPublish(event => {
-    const attributes = event.data.attributes;
-    const message = event.data.json;
+  .onPublish((message, context) => {
+    const attributes = message.attributes;
+    const message = message.json;
 
     const deviceId = attributes['deviceId'];
 
@@ -24,9 +24,9 @@ exports.receiveTelemetry = functions.pubsub
       humidity: message.hum,
       temp: message.temp,
       deviceId: deviceId,
-      timestamp: event.timestamp
+      timestamp: context.timestamp
     };
-
+  
     if (
       message.hum < 0 ||
       message.hum > 100 ||
