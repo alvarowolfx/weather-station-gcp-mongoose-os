@@ -26,7 +26,7 @@ exports.receiveTelemetry = functions.pubsub
       deviceId: deviceId,
       timestamp: context.timestamp
     };
-  
+
     if (
       payload.hum < 0 ||
       payload.hum > 100 ||
@@ -71,9 +71,10 @@ function insertIntoBigquery(data) {
  * HTTPS endpoint to be used by the webapp
  */
 exports.getReportData = functions.https.onRequest((req, res) => {
-  const table = '`' + functions.config().project.id + '.' 
-                    + functions.config().bigquery.datasetname + '.'
-                    + functions.config().bigquery.tablename + '`';
+  const projectId = process.env.GCLOUD_PROJECT;
+  const datasetName = functions.config().bigquery.datasetname;
+  const tableName = functions.config().bigquery.tablename;
+  const table = `${projectId}.${datasetName}.${tableName}`;
 
   const query = `
     SELECT 
@@ -85,7 +86,7 @@ exports.getReportData = functions.https.onRequest((req, res) => {
       min(data.humidity) as min_hum,
       max(data.humidity) as max_hum,
       count(*) as data_points      
-    FROM ${table} data
+    FROM \`${table}\` data
     WHERE data.timestamp between timestamp_sub(current_timestamp, INTERVAL 7 DAY) and current_timestamp()
     group by data_hora
     order by data_hora
