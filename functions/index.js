@@ -14,24 +14,24 @@ const db = admin.database();
  */
 exports.receiveTelemetry = functions.pubsub
   .topic('telemetry-topic')
-  .onPublish(event => {
-    const attributes = event.data.attributes;
-    const message = event.data.json;
+  .onPublish((message, context) => {
+    const attributes = message.attributes;
+    const payload = message.json;
 
     const deviceId = attributes['deviceId'];
 
     const data = {
-      humidity: message.hum,
-      temp: message.temp,
+      humidity: payload.hum,
+      temp: payload.temp,
       deviceId: deviceId,
-      timestamp: event.timestamp
+      timestamp: context.timestamp
     };
-
+  
     if (
-      message.hum < 0 ||
-      message.hum > 100 ||
-      message.temp > 100 ||
-      message.temp < -50
+      payload.hum < 0 ||
+      payload.hum > 100 ||
+      payload.temp > 100 ||
+      payload.temp < -50
     ) {
       // Validate and do nothing
       return;
@@ -71,7 +71,9 @@ function insertIntoBigquery(data) {
  * HTTPS endpoint to be used by the webapp
  */
 exports.getReportData = functions.https.onRequest((req, res) => {
-  const table = '`weather-station-iot-170004.weather_station_iot.raw_data`';
+  const table = '`' + functions.config().project.id + '.' 
+                    + functions.config().bigquery.datasetname + '.'
+                    + functions.config().bigquery.tablename + '`';
 
   const query = `
     SELECT 

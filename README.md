@@ -51,5 +51,5 @@ Here we will use it to store all of ours collected sensor data to run some queri
 
 * `npm install -g firebase-tools` or `yarn global add firebase-tools`
 * `firebase init`
-* `$ firebase functions:config:set bigquery.datasetname="weather_station_iot" bigquery.tablename="raw_data"` 
+* `$ firebase functions:config:set bigquery.datasetname="weather_station_iot" bigquery.tablename="raw_data project.id="YOUR_PROJECT_NAME"` 
 * `firebase deploy`
