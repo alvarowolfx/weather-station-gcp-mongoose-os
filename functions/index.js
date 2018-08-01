@@ -16,22 +16,22 @@ exports.receiveTelemetry = functions.pubsub
   .topic('telemetry-topic')
   .onPublish((message, context) => {
     const attributes = message.attributes;
-    const message = message.json;
+    const payload = message.json;
 
     const deviceId = attributes['deviceId'];
 
     const data = {
-      humidity: message.hum,
-      temp: message.temp,
+      humidity: payload.hum,
+      temp: payload.temp,
       deviceId: deviceId,
       timestamp: context.timestamp
     };
   
     if (
-      message.hum < 0 ||
-      message.hum > 100 ||
-      message.temp > 100 ||
-      message.temp < -50
+      payload.hum < 0 ||
+      payload.hum > 100 ||
+      payload.temp > 100 ||
+      payload.temp < -50
     ) {
       // Validate and do nothing
       return;
